@@ -51,7 +51,7 @@
       <v-card class="success-card">
         <div class="success-icon-wrap">
           <div class="success-ring">
-            <v-icon size="40" color="#00C9B1">mdi-check-bold</v-icon>
+            <v-icon size="40" color="#151B2B">mdi-check-bold</v-icon>
           </div>
         </div>
         <div class="success-title">Application Submitted</div>
@@ -78,11 +78,11 @@
           <div class="ob-header-title">Client Onboarding</div>
           <div class="ob-header-right">
             <div class="ob-save-indicator" v-if="saving">
-              <v-progress-circular size="14" width="2" indeterminate color="#00C9B1" />
+              <v-progress-circular size="14" width="2" indeterminate color="#151B2B" />
               <span>Saving…</span>
             </div>
             <div class="ob-save-indicator saved" v-else-if="lastSaved">
-              <v-icon size="14" color="#00C9B1">mdi-check-circle-outline</v-icon>
+              <v-icon size="14" color="#151B2B">mdi-check-circle-outline</v-icon>
               <span>Saved</span>
             </div>
           </div>
@@ -113,7 +113,7 @@
 
       <!-- ── Notice ── -->
       <div class="ob-notice-bar">
-        <v-icon size="16" color="#00C9B1">mdi-shield-check-outline</v-icon>
+        <v-icon size="16" color="#151B2B">mdi-shield-check-outline</v-icon>
         <span
           >All information is encrypted and handled in accordance with applicable data protection
           laws.</span
@@ -228,9 +228,9 @@
             />
 
             <!-- Regulatory status -->
-            <div class="ob-info-card mt-2">
+            <div class="ob-info-card text-white mt-2">
               <div class="ob-info-card-title">
-                <v-icon size="16" color="#00C9B1">mdi-bank-outline</v-icon>
+                <v-icon size="16" color="#151B2B">mdi-bank-outline</v-icon>
                 Regulatory Status
               </div>
               <div class="ob-radio-group mt-3">
@@ -243,15 +243,15 @@
                   :rules="[radioRequired]"
                   hide-details="auto"
                 >
-                  <v-radio label="Yes, we are regulated" :value="true" color="#00C9B1" />
-                  <v-radio label="No, not currently" :value="false" color="#00C9B1" />
+                  <v-radio label="Yes, we are regulated" :value="'yes'" />
+                  <v-radio label="No, not currently" :value="'no'" />
+                  <v-radio label="Not Applicable" :value="'na'" />
                 </v-radio-group>
               </div>
-              <template v-if="form.is_regulated">
+              <template v-if="form.is_regulated === 'yes'">
                 <div class="ob-grid-3 mt-3">
                   <v-text-field
                     v-model="form.regulator_name"
-                    label="Regulatory Body"
                     variant="outlined"
                     density="comfortable"
                     :rules="[required]"
@@ -260,7 +260,7 @@
                   />
                   <v-text-field
                     v-model="form.regulatory_license_number"
-                    label="License Number"
+                    placeholder="License Number"
                     variant="outlined"
                     density="comfortable"
                     :rules="[required]"
@@ -274,7 +274,7 @@
                     <template #activator="{ props }">
                       <v-text-field
                         v-model="form.license_expiry_date"
-                        label="License Expiry Date"
+                        placeholder="License Expiry Date"
                         variant="outlined"
                         density="comfortable"
                         prepend-inner-icon="mdi-calendar"
@@ -437,7 +437,7 @@
                     icon
                     size="x-small"
                     variant="text"
-                    color="#00C9B1"
+                    color="#151B2B"
                     @click="editDirector(i)"
                   >
                     <v-icon>mdi-pencil-outline</v-icon>
@@ -446,9 +446,9 @@
               </div>
             </div>
 
-            <v-btn class="voima-btn-outline mt-4" @click="openDirectorDialog()" elevation="0">
+            <v-btn class="voima-btn-primary mt-4" @click="openDirectorDialog()" elevation="0">
               <v-icon start>mdi-plus</v-icon>
-              Add Director / UBO
+              Add Director
             </v-btn>
           </div>
         </div>
@@ -465,7 +465,7 @@
             </div>
 
             <div class="ob-grid-2">
-              <v-select
+              <!-- <v-select
                 v-model="form.service_package"
                 :items="servicePackages"
                 item-title="label"
@@ -474,11 +474,25 @@
                 variant="outlined"
                 density="comfortable"
                 class="ob-field"
-              />
+              /> -->
               <v-select
                 v-model="form.estimated_monthly_transactions"
                 :items="transactionBands"
                 label="Estimated Monthly Transactions"
+                variant="outlined"
+                density="comfortable"
+                class="ob-field"
+              />
+              <v-select
+                :items="employeesCounts"
+                label="Number of Employees"
+                variant="outlined"
+                density="comfortable"
+                class="ob-field"
+              />
+              <v-select
+                :items="operationsOptions"
+                label="Business operations"
                 variant="outlined"
                 density="comfortable"
                 class="ob-field"
@@ -519,8 +533,8 @@
                 inline
                 hide-details="auto"
               >
-                <v-radio label="Yes, we have an existing programme" :value="true" color="#00C9B1" />
-                <v-radio label="No, we are starting from scratch" :value="false" color="#00C9B1" />
+                <v-radio label="Yes, we have an existing programme" :value="true" color="#151B2B" />
+                <v-radio label="No, we are starting from scratch" :value="false" color="#151B2B" />
               </v-radio-group>
             </div>
             <v-textarea
@@ -556,7 +570,7 @@
             </div>
 
             <div class="doc-notice">
-              <v-icon size="15" color="#00C9B1">mdi-information-outline</v-icon>
+              <v-icon size="15">mdi-information-outline</v-icon>
               Accepted formats: PDF, JPG, PNG — max 10MB per file. All uploads are encrypted.
             </div>
 
@@ -573,7 +587,7 @@
               >
                 <div class="doc-card-left">
                   <div class="doc-icon-wrap">
-                    <v-icon size="22" :color="uploads[doc.key] ? '#00C9B1' : '#64748b'">{{
+                    <v-icon size="22" :color="uploads[doc.key] ? '#151B2B' : '#64748b'">{{
                       doc.icon
                     }}</v-icon>
                   </div>
@@ -584,7 +598,7 @@
                     </div>
                     <div class="doc-hint">{{ doc.hint }}</div>
                     <div class="doc-uploaded-name" v-if="uploads[doc.key]">
-                      <v-icon size="12" color="#00C9B1">mdi-check-circle</v-icon>
+                      <v-icon size="12" color="#151B2B">mdi-check-circle</v-icon>
                       {{ uploads[doc.key].name }}
                     </div>
                     <div class="doc-error" v-if="uploadErrors[doc.key]">
@@ -596,7 +610,7 @@
                   <v-btn
                     size="small"
                     variant="tonal"
-                    :color="uploads[doc.key] ? '#00C9B1' : '#334155'"
+                    :color="uploads[doc.key] ? '#151B2B' : '#334155'"
                     :loading="uploading[doc.key]"
                     @click="triggerFile(doc.key)"
                     elevation="0"
@@ -684,7 +698,7 @@
               <div class="review-card" @click="goToStep(2)">
                 <div class="review-card-head">
                   <v-icon size="15">mdi-account-multiple-outline</v-icon>
-                  Directors / UBOs
+                  Directors
                   <v-icon size="14" class="review-edit-icon">mdi-pencil-outline</v-icon>
                 </div>
                 <div class="review-row" v-if="directors.length === 0">
@@ -736,8 +750,8 @@
             </div>
 
             <!-- Declaration -->
-            <div class="declaration-box mt-6">
-              <v-checkbox v-model="form.declaration" color="#00C9B1" hide-details>
+            <div class="declaration-box text-white mt-6">
+              <v-checkbox v-model="form.declaration" color="white" hide-details>
                 <template #label>
                   <span class="declaration-text">
                     I am authorised to submit this application on behalf of
@@ -865,17 +879,18 @@
                 class="ob-field"
               />
 
-              <div class="ob-info-card mt-2">
+              <!-- <div class="ob-info-card mt-2">
                 <v-checkbox
                   v-model="directorDraft.is_ubo"
                   label="This person is a Ultimate Beneficial Owner (UBO)"
-                  color="#00C9B1"
                   hide-details
+                  color="white"
+                  base-color="white"
                 />
                 <v-text-field
                   v-if="directorDraft.is_ubo"
                   v-model.number="directorDraft.ownership_percent"
-                  label="Ownership Percentage (%)"
+                  placeholder="Ownership Percentage (%)"
                   variant="outlined"
                   density="comfortable"
                   type="number"
@@ -883,7 +898,7 @@
                   class="ob-field mt-3"
                   style="max-width: 200px"
                 />
-              </div>
+              </div> -->
             </div>
           </v-form>
           <div class="director-dialog-footer">
@@ -972,7 +987,7 @@ const form = reactive({
   trading_name: '',
   organisation_type: null,
   registration_number: '',
-  registration_country: 'Nigeria',
+  registration_country: 'United Kingdom',
   date_of_incorporation: '',
   website: '',
   industry_description: '',
@@ -987,7 +1002,7 @@ const form = reactive({
   registered_address: '',
   operating_address: '',
   city: '',
-  country: 'Nigeria',
+  country: 'United Kingdom',
   service_package: null,
   service_interest: [],
   description_of_needs: '',
@@ -1360,7 +1375,7 @@ const resetForm = () => {
     trading_name: '',
     organisation_type: null,
     registration_number: '',
-    registration_country: 'Nigeria',
+    registration_country: 'United Kingdom',
     date_of_incorporation: '',
     website: '',
     industry_description: '',
@@ -1375,7 +1390,7 @@ const resetForm = () => {
     registered_address: '',
     operating_address: '',
     city: '',
-    country: 'Nigeria',
+    country: 'United Kingdom',
     service_package: null,
     service_interest: [],
     description_of_needs: '',
@@ -1444,14 +1459,8 @@ const serviceOptions = [
   },
   { label: 'Regulatory Guidance', value: 'regulatory_guidance', icon: 'mdi-bank-outline' },
   { label: 'Vendor Assessment', value: 'vendor_assessment', icon: 'mdi-storefront-outline' },
-  {
-    label: 'Transaction Monitoring',
-    value: 'transaction_monitoring',
-    icon: 'mdi-chart-timeline-variant'
-  },
   { label: 'Governance Review', value: 'governance_review', icon: 'mdi-scale-balance' },
   { label: 'Audit Preparation', value: 'audit_preparation', icon: 'mdi-clipboard-check-outline' },
-  { label: 'Sanctions Screening', value: 'sanctions_screening', icon: 'mdi-magnify-scan' },
   { label: 'Training & Awareness', value: 'training', icon: 'mdi-school-outline' }
 ]
 
@@ -1462,6 +1471,14 @@ const transactionBands = [
   '5,000 – 20,000',
   '20,000 – 50,000',
   'Over 50,000'
+]
+const employeesCounts = ['1 – 50', '50 – 100', '100 – 200', '200 – 500', '500 – 1000', 'Over 1,000']
+
+const operationsOptions = [
+  'Cash-based activities',
+  'Crypto and digital assets',
+  'Health and safety compliance',
+  'Cross-border cash movements'
 ]
 
 const countries = [
@@ -1486,9 +1503,9 @@ const countries = [
   --v-surface: #ffffff;
   --v-header: #ffffff;
   --v-field: #f8fafc;
-  --v-teal: #00c9b1;
+  --v-teal: #151b2b;
   --v-teal-d: #00a892;
-  --v-teal-lt: #e6faf8;
+  --v-teal-lt: #151b2b;
   --v-ink: #0f172a;
   --v-muted: #64748b;
   --v-subtle: #94a3b8;
@@ -1628,7 +1645,6 @@ const countries = [
   height: 28px;
   border-radius: 50%;
   background: var(--v-bg);
-  border: 2px solid var(--v-border-d);
   color: var(--v-subtle);
   font-size: 11px;
   font-weight: 700;
@@ -1641,12 +1657,11 @@ const countries = [
   background: var(--v-teal);
   border-color: var(--v-teal);
   color: #fff;
-  box-shadow: 0 0 0 4px rgba(0, 201, 177, 0.15);
 }
 .ob-step.done .ob-step-dot {
   background: var(--v-teal-lt);
   border-color: var(--v-teal);
-  color: var(--v-teal);
+  color: white;
 }
 .ob-step-label {
   font-size: 10px;
@@ -1671,7 +1686,6 @@ const countries = [
   align-items: center;
   gap: 8px;
   font-size: 12px;
-  color: var(--v-muted);
 }
 
 /* ── Body ───────────────────────────────────────────────────────────────── */
@@ -1709,12 +1723,10 @@ const countries = [
 .ob-section-title {
   font-size: 18px;
   font-weight: 700;
-  color: var(--v-ink);
   line-height: 1.2;
 }
 .ob-section-sub {
   font-size: 13px;
-  color: var(--v-muted);
   margin-top: 2px;
 }
 
@@ -1753,13 +1765,10 @@ const countries = [
   --v-field-border-color: var(--v-teal) !important;
 }
 .ob-section :deep(.v-label) {
-  color: var(--v-muted) !important;
 }
 .ob-section :deep(.v-field__input) {
-  color: var(--v-ink) !important;
 }
 .ob-section :deep(.v-select__selection) {
-  color: var(--v-ink) !important;
 }
 .ob-section :deep(.v-field__prepend-inner),
 .ob-section :deep(.v-field__append-inner) {
@@ -1769,25 +1778,34 @@ const countries = [
   color: var(--v-danger) !important;
 }
 .ob-section :deep(.v-radio .v-label) {
-  color: var(--v-ink) !important;
   font-size: 13px !important;
 }
 .ob-section :deep(.v-checkbox .v-label) {
-  color: var(--v-ink) !important;
   font-size: 13px !important;
 }
 
 /* ── Info card ──────────────────────────────────────────────────────────── */
+.ob-info-card :deep(.v-checkbox .v-label) {
+  color: #ffffff !important;
+}
+
+.ob-info-card :deep(.v-selection-control__input) {
+  color: white !important;
+}
+
+/* unchecked box border */
+.ob-info-card :deep(.v-selection-control__wrapper) {
+  color: white !important;
+}
 .ob-info-card {
   background: var(--v-teal-lt);
-  border: 1px solid rgba(0, 201, 177, 0.25);
   border-radius: 12px;
   padding: 18px 20px;
 }
 .ob-info-card-title {
   font-size: 13px;
   font-weight: 700;
-  color: var(--v-teal-d);
+  color: white;
   display: flex;
   align-items: center;
   gap: 6px;
@@ -1798,7 +1816,7 @@ const countries = [
 .ob-radio-label {
   font-size: 13px;
   font-weight: 600;
-  color: var(--v-ink);
+  color: white;
   margin-bottom: 8px;
 }
 .ob-req {
@@ -1807,7 +1825,7 @@ const countries = [
 .ob-label {
   font-size: 13px;
   font-weight: 600;
-  color: var(--v-ink);
+  color: white;
 }
 
 /* ── Divider ────────────────────────────────────────────────────────────── */
@@ -1950,12 +1968,11 @@ const countries = [
 
 /* ── Documents ──────────────────────────────────────────────────────────── */
 .doc-notice {
-  background: var(--v-teal-lt);
-  border: 1px solid rgba(0, 201, 177, 0.3);
+  background: rgb(238, 150, 150);
   border-radius: 10px;
   padding: 10px 16px;
   font-size: 12px;
-  color: var(--v-teal-d);
+  color: white;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -2130,6 +2147,10 @@ const countries = [
 }
 
 /* ── Declaration ────────────────────────────────────────────────────────── */
+.declaration-box :deep(.v-selection-control__label) {
+  color: white !important;
+  opacity: 1 !important;
+}
 .declaration-box {
   background: var(--v-teal-lt);
   border: 1px solid rgba(0, 201, 177, 0.25);
@@ -2138,7 +2159,7 @@ const countries = [
 }
 .declaration-text {
   font-size: 13px;
-  color: var(--v-ink);
+  color: white;
   line-height: 1.6;
 }
 
@@ -2184,10 +2205,8 @@ const countries = [
   height: 42px !important;
   font-size: 13px !important;
   letter-spacing: 0 !important;
-  box-shadow: 0 2px 8px rgba(0, 201, 177, 0.25) !important;
 }
 .voima-btn-primary:hover {
-  background: var(--v-teal-d) !important;
 }
 
 .voima-btn-success {
@@ -2220,7 +2239,7 @@ const countries = [
 .voima-btn-outline {
   background: transparent !important;
   color: var(--v-teal-d) !important;
-  border: 1.5px solid rgba(0, 201, 177, 0.5) !important;
+  border: var(--v-teal-lt);
   font-weight: 600 !important;
   text-transform: none !important;
   border-radius: 10px !important;
@@ -2260,9 +2279,7 @@ const countries = [
   padding: 4px 10px;
   border-radius: 99px;
   background: var(--v-teal-lt);
-  color: var(--v-teal-d);
-  border: 1px solid rgba(0, 201, 177, 0.3);
-  text-transform: uppercase;
+  color: white;
   letter-spacing: 0.06em;
 }
 .disclaimer-body {
