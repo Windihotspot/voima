@@ -51,7 +51,7 @@
       <v-card class="success-card">
         <div class="success-icon-wrap">
           <div class="success-ring">
-            <v-icon size="40" color="#151B2B">mdi-check-bold</v-icon>
+            <v-icon size="40" color="white">mdi-check-bold</v-icon>
           </div>
         </div>
         <div class="success-title">Application Submitted</div>
@@ -2442,13 +2442,13 @@ const countries = [
   font-size: 10px;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: var(--v-muted);
+  color: white;
   margin-bottom: 6px;
 }
 .ref-value {
   font-size: 22px;
   font-weight: 600;
-  color: var(--v-teal-d);
+  color: white;
   letter-spacing: 2px;
 }
 .success-hint {
