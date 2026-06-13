@@ -78,11 +78,11 @@
           <div class="ob-header-title">Client Onboarding</div>
           <div class="ob-header-right">
             <div class="ob-save-indicator" v-if="saving">
-              <v-progress-circular size="14" width="2" indeterminate color="#151B2B" />
+              <v-progress-circular size="14" width="2" indeterminate color="#060d14" />
               <span>Saving…</span>
             </div>
             <div class="ob-save-indicator saved" v-else-if="lastSaved">
-              <v-icon size="14" color="#151B2B">mdi-check-circle-outline</v-icon>
+              <v-icon size="14" color="#060d14">mdi-check-circle-outline</v-icon>
               <span>Saved</span>
             </div>
           </div>
@@ -113,7 +113,7 @@
 
       <!-- ── Notice ── -->
       <div class="ob-notice-bar">
-        <v-icon size="16" color="#151B2B">mdi-shield-check-outline</v-icon>
+        <v-icon size="16" color="#060d14">mdi-shield-check-outline</v-icon>
         <span
           >All information is encrypted and handled in accordance with applicable data protection
           laws.</span
@@ -230,7 +230,7 @@
             <!-- Regulatory status -->
             <div class="ob-info-card text-white mt-2">
               <div class="ob-info-card-title">
-                <v-icon size="16" color="#151B2B">mdi-bank-outline</v-icon>
+                <v-icon size="16" color="#060d14">mdi-bank-outline</v-icon>
                 Regulatory Status
               </div>
               <div class="ob-radio-group mt-3">
@@ -437,7 +437,7 @@
                     icon
                     size="x-small"
                     variant="text"
-                    color="#151B2B"
+                    color="#060d14"
                     @click="editDirector(i)"
                   >
                     <v-icon>mdi-pencil-outline</v-icon>
@@ -533,8 +533,8 @@
                 inline
                 hide-details="auto"
               >
-                <v-radio label="Yes, we have an existing programme" :value="true" color="#151B2B" />
-                <v-radio label="No, we are starting from scratch" :value="false" color="#151B2B" />
+                <v-radio label="Yes, we have an existing programme" :value="true" color="#060d14" />
+                <v-radio label="No, we are starting from scratch" :value="false" color="#060d14" />
               </v-radio-group>
             </div>
             <v-textarea
@@ -587,7 +587,7 @@
               >
                 <div class="doc-card-left">
                   <div class="doc-icon-wrap">
-                    <v-icon size="22" :color="uploads[doc.key] ? '#151B2B' : '#64748b'">{{
+                    <v-icon size="22" :color="uploads[doc.key] ? '#060d14' : '#64748b'">{{
                       doc.icon
                     }}</v-icon>
                   </div>
@@ -598,7 +598,7 @@
                     </div>
                     <div class="doc-hint">{{ doc.hint }}</div>
                     <div class="doc-uploaded-name" v-if="uploads[doc.key]">
-                      <v-icon size="12" color="#151B2B">mdi-check-circle</v-icon>
+                      <v-icon size="12" color="#060d14">mdi-check-circle</v-icon>
                       {{ uploads[doc.key].name }}
                     </div>
                     <div class="doc-error" v-if="uploadErrors[doc.key]">
@@ -610,7 +610,7 @@
                   <v-btn
                     size="small"
                     variant="tonal"
-                    :color="uploads[doc.key] ? '#151B2B' : '#334155'"
+                    :color="uploads[doc.key] ? '#060d14' : '#334155'"
                     :loading="uploading[doc.key]"
                     @click="triggerFile(doc.key)"
                     elevation="0"
@@ -1503,9 +1503,9 @@ const countries = [
   --v-surface: #ffffff;
   --v-header: #ffffff;
   --v-field: #f8fafc;
-  --v-teal: #151b2b;
+  --v-teal: #060d14;
   --v-teal-d: #00a892;
-  --v-teal-lt: #151b2b;
+  --v-teal-lt: #060d14;
   --v-ink: #0f172a;
   --v-muted: #64748b;
   --v-subtle: #94a3b8;
