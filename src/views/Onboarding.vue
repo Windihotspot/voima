@@ -533,8 +533,12 @@
                 inline
                 hide-details="auto"
               >
-                <v-radio label="Yes, we have an existing programme" :value="true" color="#060d14" />
-                <v-radio label="No, we are starting from scratch" :value="false" color="#060d14" />
+                <v-radio
+                  label="Yes, we have an existing programme"
+                  :value="false"
+                  color="#060d14"
+                />
+                <v-radio label="No, we are starting from scratch" :value="true" color="#060d14" />
               </v-radio-group>
             </div>
             <v-textarea
@@ -962,7 +966,7 @@ const steps = [
   { label: 'Documents' },
   { label: 'Review' }
 ]
-const currentStep = ref(0)
+const currentStep = ref(4)
 const progressPercent = computed(() => Math.round((currentStep.value / (steps.length - 1)) * 100))
 
 // ── Form refs ──────────────────────────────────────────────────────────────
@@ -1355,6 +1359,18 @@ const submitApplication = async () => {
     if (error) throw error
 
     submittedRef.value = data.reference_number
+
+    // Sync auth account for portal access
+    const { data: syncData, error: authSyncError } = await supabase.functions.invoke(
+      'create-applicant-user',
+      { body: { application_id: applicationId.value } }
+    )
+    console.log('sync data:', syncData)
+    if (authSyncError) {
+      // Non-fatal: application is submitted either way, log for follow-up
+      console.log('Applicant account sync failed:', authSyncError)
+    }
+
     showSuccess.value = true
   } catch (err) {
     showSnack('Submission failed: ' + err.message)
@@ -1880,7 +1896,7 @@ const countries = [
 .service-chip:hover {
   border-color: var(--v-teal);
   color: var(--v-teal);
-  background: var(--v-teal-lt);
+  background: var(--v-teal-d);
 }
 .service-chip.selected {
   border-color: var(--v-teal);
