@@ -61,12 +61,19 @@
           <div class="ref-value">{{ submittedRef }}</div>
         </div>
         <p class="success-hint">
-          A member of the Voima team will review your application and be in touch within
-          <strong>1–3 business days</strong>. Please save your reference number for follow-up
-          enquiries.
+          To get started, please complete your <strong>Compliance Health Assessment</strong> — this
+          helps us understand your current compliance posture, identify gaps, and build a tailored
+          action plan for your organisation. It takes approximately
+          <strong>10–15 minutes</strong> to complete.
         </p>
-        <v-btn class="voima-btn-primary mt-4" @click="resetForm" elevation="0">
-          Submit Another Application
+
+        <v-btn
+          class="voima-btn-primary mt-4"
+          @click="router.push({ name: 'assessment-new', params: { applicationId: applicationId } })"
+          elevation="0"
+        >
+          <v-icon start>mdi-shield-check-outline</v-icon>
+          Start Compliance Assessment
         </v-btn>
       </v-card>
     </v-dialog>
@@ -932,6 +939,8 @@ import { ref, reactive, computed, onMounted } from 'vue'
 import { supabase } from '@/services/supabase'
 const incorporationMenu = ref(false)
 const licenseExpiryMenu = ref(false)
+import { useRouter } from 'vue-router'
+const router = useRouter()
 const formatDate = (date) => {
   if (!date) return ''
 
@@ -966,7 +975,7 @@ const steps = [
   { label: 'Documents' },
   { label: 'Review' }
 ]
-const currentStep = ref(4)
+const currentStep = ref(5)
 const progressPercent = computed(() => Math.round((currentStep.value / (steps.length - 1)) * 100))
 
 // ── Form refs ──────────────────────────────────────────────────────────────
@@ -982,7 +991,7 @@ const applicationId = ref(null)
 const saving = ref(false)
 const lastSaved = ref(false)
 const submitting = ref(false)
-const showSuccess = ref(false)
+const showSuccess = ref(true)
 const submittedRef = ref('')
 
 // ── Form data ──────────────────────────────────────────────────────────────
