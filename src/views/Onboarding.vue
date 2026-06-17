@@ -975,7 +975,7 @@ const steps = [
   { label: 'Documents' },
   { label: 'Review' }
 ]
-const currentStep = ref(5)
+const currentStep = ref(0)
 const progressPercent = computed(() => Math.round((currentStep.value / (steps.length - 1)) * 100))
 
 // ── Form refs ──────────────────────────────────────────────────────────────
