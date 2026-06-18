@@ -991,7 +991,7 @@ const applicationId = ref(null)
 const saving = ref(false)
 const lastSaved = ref(false)
 const submitting = ref(false)
-const showSuccess = ref(true)
+const showSuccess = ref(false)
 const submittedRef = ref('')
 
 // ── Form data ──────────────────────────────────────────────────────────────
