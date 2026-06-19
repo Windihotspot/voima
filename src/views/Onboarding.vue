@@ -22,7 +22,6 @@
             <li>Board Resolution (if applicable)</li>
             <li>Regulatory License (if regulated)</li>
             <li>AML/CFT Policy document</li>
-            <li>Valid ID for each Director / UBO</li>
           </ul>
           <div class="disclaimer-divider" />
           <p class="disclaimer-legal">
@@ -56,24 +55,20 @@
         </div>
         <div class="success-title">Application Submitted</div>
         <div class="success-sub">Your onboarding application has been received.</div>
-        <div class="ref-box">
+        <!-- <div class="ref-box">
           <div class="ref-label">Reference Number</div>
           <div class="ref-value">{{ submittedRef }}</div>
-        </div>
+        </div> -->
         <p class="success-hint">
-          To get started, please complete your <strong>Compliance Health Assessment</strong> — this
-          helps us understand your current compliance posture, identify gaps, and build a tailored
-          action plan for your organisation. It takes approximately
-          <strong>10–15 minutes</strong> to complete.
+          You are to complete your <strong>Compliance Health Assessment</strong>, this helps us
+          understand your current compliance posture, identify gaps, and build a tailored action
+          plan for your organisation. It takes approximately <strong>5 – 10 minutes</strong> to
+          complete.
         </p>
 
-        <v-btn
-          class="voima-btn-primary mt-4"
-          @click="router.push({ name: 'assessment-new', params: { applicationId: applicationId } })"
-          elevation="0"
-        >
-          <v-icon start>mdi-shield-check-outline</v-icon>
-          Start Compliance Assessment
+        <v-btn class="voima-btn-primary mt-4" @click="returnHome" elevation="0">
+          <v-icon start>mdi-home-outline</v-icon>
+          Return Home
         </v-btn>
       </v-card>
     </v-dialog>
@@ -338,6 +333,26 @@
               />
             </div>
             <div class="ob-grid-2">
+              <v-select
+                v-model="form.country"
+                :items="countries"
+                item-title="title"
+                item-value="title"
+                label="Country"
+                variant="outlined"
+                density="comfortable"
+                class="ob-field"
+              />
+
+              <v-text-field
+                v-model="form.contact_phone"
+                label="Phone Number"
+                variant="outlined"
+                density="comfortable"
+                placeholder="+234 8012345678"
+                :rules="[required, phoneRule]"
+                class="ob-field"
+              />
               <v-text-field
                 v-model="form.contact_email"
                 label="Email Address"
@@ -345,15 +360,6 @@
                 density="comfortable"
                 :rules="[required, emailRule]"
                 class="ob-field"
-              />
-              <v-text-field
-                v-model="form.contact_phone"
-                label="Phone Number"
-                variant="outlined"
-                density="comfortable"
-                :rules="[required, phoneRule]"
-                class="ob-field"
-                placeholder="+234..."
               />
             </div>
 
@@ -378,15 +384,6 @@
               <v-text-field
                 v-model="form.city"
                 label="City"
-                variant="outlined"
-                density="comfortable"
-                :rules="[required]"
-                class="ob-field"
-              />
-              <v-select
-                v-model="form.country"
-                :items="countries"
-                label="Country"
                 variant="outlined"
                 density="comfortable"
                 :rules="[required]"
@@ -497,7 +494,7 @@
                 density="comfortable"
                 class="ob-field"
               />
-              <v-select
+              <v-autocomplete
                 :items="operationsOptions"
                 label="Business operations"
                 variant="outlined"
@@ -848,21 +845,39 @@
                 />
               </div>
               <div class="ob-grid-2">
-                <v-text-field
+                <v-select
+                  :items="countries"
                   v-model="directorDraft.nationality"
                   label="Nationality"
                   variant="outlined"
                   density="comfortable"
                   class="ob-field"
                 />
-                <v-text-field
-                  v-model="directorDraft.date_of_birth"
-                  label="Date of Birth"
-                  variant="outlined"
-                  density="comfortable"
-                  placeholder="YYYY-MM-DD"
-                  class="ob-field"
-                />
+                <v-menu v-model="directorMenu" :close-on-content-click="false" location="bottom">
+                  <template #activator="{ props }">
+                    <v-text-field
+                      v-model="directorDraft.date_of_birth"
+                      label="Director date of birth"
+                      variant="outlined"
+                      density="comfortable"
+                      prepend-inner-icon="mdi-calendar"
+                      readonly
+                      v-bind="props"
+                      :rules="[dateRule]"
+                      class="ob-field"
+                    />
+                  </template>
+
+                  <v-date-picker
+                    :model-value="directorDraft.date_of_birth"
+                    @update:model-value="
+                      (val) => {
+                        directorDraft.date_of_birth = formatDate(val)
+                        directorMenu = false
+                      }
+                    "
+                  />
+                </v-menu>
               </div>
               <div class="ob-grid-2">
                 <v-select
@@ -935,9 +950,10 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed, onMounted } from 'vue'
+import { ref, reactive, computed, watch } from 'vue'
 import { supabase } from '@/services/supabase'
 const incorporationMenu = ref(false)
+const directorMenu = ref(false)
 const licenseExpiryMenu = ref(false)
 import { useRouter } from 'vue-router'
 const router = useRouter()
@@ -993,6 +1009,15 @@ const lastSaved = ref(false)
 const submitting = ref(false)
 const showSuccess = ref(false)
 const submittedRef = ref('')
+const returnHome = () => {
+  showSuccess.value = false
+
+  // same tab
+  window.location.href = 'https://voimacaas.co.uk/'
+
+  // OR new tab:
+  // window.open('https://voimacaas.co.uk/', '_blank', 'noopener,noreferrer')
+}
 
 // ── Form data ──────────────────────────────────────────────────────────────
 const form = reactive({
@@ -1113,16 +1138,14 @@ const requiredDocs = [
     docType: 'aml_cft_policy',
     label: 'AML/CFT Policy',
     hint: 'Current version',
-    icon: 'mdi-shield-lock-outline',
-    required: true
+    icon: 'mdi-shield-lock-outline'
   },
   {
     key: 'kyc_policy',
     docType: 'kyc_policy',
     label: 'KYC Policy',
     hint: 'Current version',
-    icon: 'mdi-account-check-outline',
-    required: true
+    icon: 'mdi-account-check-outline'
   },
   {
     key: 'regulatory_license',
@@ -1362,7 +1385,7 @@ const submitApplication = async () => {
 
   submitting.value = true
   try {
-    const { data, error } = await supabase.rpc('submit_onboarding_application', {
+    const { data, error } = await supabase.rpc('submit_onboarding_application_client', {
       p_application_id: applicationId.value
     })
     if (error) throw error
@@ -1381,6 +1404,14 @@ const submitApplication = async () => {
     }
 
     showSuccess.value = true
+    setTimeout(() => {
+      router.push({
+        name: 'assessment-new',
+        params: {
+          applicationId: applicationId.value
+        }
+      })
+    }, 2000)
   } catch (err) {
     showSnack('Submission failed: ' + err.message)
   } finally {
@@ -1475,18 +1506,71 @@ const servicePackages = [
 ]
 
 const serviceOptions = [
-  { label: 'AML/CFT Advisory', value: 'aml_advisory', icon: 'mdi-shield-alert-outline' },
-  { label: 'KYC Review', value: 'kyc_review', icon: 'mdi-account-check-outline' },
   {
-    label: 'Policy Development',
-    value: 'policy_development',
+    label: 'Compliance Operations',
+    value: 'compliance_operations',
+    icon: 'mdi-shield-check-outline'
+  },
+  {
+    label: 'Governance & Risk',
+    value: 'governance_risk',
+    icon: 'mdi-scale-balance'
+  },
+  {
+    label: 'Regulatory Compliance Guidance',
+    value: 'regulatory_compliance_guidance',
+    icon: 'mdi-bank-outline'
+  },
+  {
+    label: 'Licensing & Authorisations',
+    value: 'licensing_authorisations',
+    icon: 'mdi-certificate-outline'
+  },
+  {
+    label: 'Financial Crime',
+    value: 'financial_crime',
+    icon: 'mdi-shield-alert-outline'
+  },
+  {
+    label: 'Policies & Frameworks',
+    value: 'policies_frameworks',
     icon: 'mdi-file-document-edit-outline'
   },
-  { label: 'Regulatory Guidance', value: 'regulatory_guidance', icon: 'mdi-bank-outline' },
-  { label: 'Vendor Assessment', value: 'vendor_assessment', icon: 'mdi-storefront-outline' },
-  { label: 'Governance Review', value: 'governance_review', icon: 'mdi-scale-balance' },
-  { label: 'Audit Preparation', value: 'audit_preparation', icon: 'mdi-clipboard-check-outline' },
-  { label: 'Training & Awareness', value: 'training', icon: 'mdi-school-outline' }
+  {
+    label: 'Audit Preparation & Assurance',
+    value: 'audit_preparation_assurance',
+    icon: 'mdi-clipboard-check-outline'
+  },
+  {
+    label: 'Data Protection & Cyber Security',
+    value: 'data_protection_cyber_security',
+    icon: 'mdi-lock-outline'
+  },
+  {
+    label: 'Training & Awareness',
+    value: 'training_awareness',
+    icon: 'mdi-school-outline'
+  },
+  {
+    label: 'Executive Oversight',
+    value: 'executive_oversight',
+    icon: 'mdi-account-tie-outline'
+  },
+  {
+    label: 'Industry Solutions',
+    value: 'industry_solutions',
+    icon: 'mdi-domain'
+  },
+  {
+    label: 'Compliance Infrastructure',
+    value: 'compliance_infrastructure',
+    icon: 'mdi-server-network-outline'
+  },
+  {
+    label: 'Vendor Management',
+    value: 'vendor_management',
+    icon: 'mdi-storefront-outline'
+  }
 ]
 
 const transactionBands = [
@@ -1500,25 +1584,75 @@ const transactionBands = [
 const employeesCounts = ['1 – 50', '50 – 100', '100 – 200', '200 – 500', '500 – 1000', 'Over 1,000']
 
 const operationsOptions = [
+  'Accounting and audit services',
   'Cash-based activities',
+  'Charity and non-profit organisations',
+  'Construction and engineering',
+  'Corporate and business services',
+  'Cross-border cash movements',
+  'Cross-border financial services',
   'Crypto and digital assets',
+  'Crowdfunding and fundraising platforms',
+  'Custody and wallet services',
+  'Decentralised finance (DeFi)',
+  'Defence and security services',
+  'Digital marketing and advertising',
+  'E-commerce and online marketplaces',
+  'Electronic money services',
+  'Energy and utilities',
+  'Foreign exchange services',
+  'Gambling and gaming',
+  'Government contracting',
   'Health and safety compliance',
-  'Cross-border cash movements'
+  'Healthcare and medical services',
+  'High-value goods trading',
+  'Import and export operations',
+  'Insurance services',
+  'International money transfers',
+  'Investment and wealth management',
+  'Legal services',
+  'Lending and credit services',
+  'Logistics and freight forwarding',
+  'Manufacturing and industrial operations',
+  'NFT and digital asset marketplaces',
+  'Payment processing services',
+  'Precious metals and precious stones trading',
+  'Professional services',
+  'Real estate and property services',
+  'Recruitment and staffing services',
+  'Securities and brokerage services',
+  'Stablecoin-related activities',
+  'Technology and software services',
+  'Telecommunications services',
+  'Third-party agent networks',
+  'Trust and company service providers (TCSPs)',
+  'Virtual Asset Service Providers (VASPs)'
 ]
 
 const countries = [
-  'Nigeria',
-  'Ghana',
-  'Kenya',
-  'South Africa',
-  'United Kingdom',
-  'United States',
-  'Canada',
-  'UAE',
-  'Rwanda',
-  'Senegal',
-  'Other'
+  { title: 'United Kingdom', code: '+44' },
+  { title: 'United States', code: '+1' },
+  { title: 'Nigeria', code: '+234' },
+  { title: 'Ghana', code: '+233' },
+  { title: 'Kenya', code: '+254' },
+  { title: 'Canada', code: '+1' },
+  { title: 'Rwanda', code: '+250' }
 ]
+
+watch(
+  () => form.country,
+  (country) => {
+    const selected = countries.find((c) => c.title === country)
+
+    if (!selected) return
+
+    // Only replace if user hasn't typed a number yet
+    if (!form.contact_phone || form.contact_phone.startsWith('+')) {
+      form.contact_phone = selected.code + ' '
+    }
+  },
+  { immediate: true }
+)
 </script>
 
 <style>

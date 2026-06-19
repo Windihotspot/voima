@@ -137,9 +137,9 @@
                 {{ activeModule.description }}
               </p>
               <div class="ca-module-meta">
-                <span class="ca-module-weight-pill">
+                <!-- <span class="ca-module-weight-pill">
                   {{ moduleWeight(activeModule) }}% of total score
-                </span>
+                </span> -->
                 <span class="ca-module-qcount">
                   {{ activeModuleQuestions.length }} question{{
                     activeModuleQuestions.length !== 1 ? 's' : ''
@@ -167,10 +167,10 @@
                 <div class="ca-question-head" @click="toggleExpand(q.id)">
                   <div class="ca-question-meta">
                     <span class="ca-qref">{{ q.question_ref }}</span>
-                    <span class="ca-weight-badge" :class="`weight-${q.weight}`">
+                    <!-- <span class="ca-weight-badge" :class="`weight-${q.weight}`">
                       {{ q.weight }}
-                    </span>
-                    <span class="ca-pts">{{ q.points }}pt{{ q.points !== 1 ? 's' : '' }}</span>
+                    </span> -->
+                    <!-- <span class="ca-pts">{{ q.points }}pt{{ q.points !== 1 ? 's' : '' }}</span> -->
                   </div>
                   <p class="ca-question-text">{{ q.question_text }}</p>
                   <div class="ca-question-status" v-if="getResponse(q.id)">
@@ -681,7 +681,6 @@ const loadOrCreateAssessment = async () => {
     healthRating.value = assessment.value.health_rating || 'needs_improvement'
   } catch (err) {
     console.log('load assessment error:', err)
-    showSnack('Failed to load assessment: ' + err.message)
   } finally {
     loading.value = false
   }
