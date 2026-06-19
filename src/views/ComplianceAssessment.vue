@@ -1,5 +1,5 @@
 <template>
-  <div class="voima-app" theme="light">
+  <div class="voima-app m-4" theme="light">
     <!-- ── Exit / Save Dialog ── -->
     <v-dialog v-model="showExitDialog" max-width="480">
       <v-card class="ca-dialog-card">
@@ -927,7 +927,6 @@ onMounted(loadOrCreateAssessment)
     0 2px 8px rgba(0, 0, 0, 0.04);
 }
 .ca-header-inner {
-  max-width: 1200px;
   margin: 0 auto;
   padding: 12px 24px;
   display: flex;
@@ -1000,7 +999,6 @@ onMounted(loadOrCreateAssessment)
   display: none;
 }
 .ca-tabs-inner {
-  max-width: 1200px;
   margin: 0 auto;
   padding: 0 24px;
   display: flex;
@@ -1071,7 +1069,6 @@ onMounted(loadOrCreateAssessment)
 
 /* ── Body layout ──────────────────────────────────────────────────────────── */
 .ca-body {
-  max-width: 1200px;
   margin: 24px auto;
   padding: 0 24px;
 }
