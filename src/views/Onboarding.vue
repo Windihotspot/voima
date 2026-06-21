@@ -1247,6 +1247,11 @@ const saveDraft = async () => {
   saving.value = true
   lastSaved.value = false
   try {
+    const selected = countries.find((c) => c.title === form.country)
+
+    const localPhone = selected
+      ? form.contact_phone.replace(selected.code, '').trim()
+      : form.contact_phone.trim()
     const payload = {
       p_id: applicationId.value,
       p_company_name: form.company_name || null,
@@ -1264,7 +1269,7 @@ const saveDraft = async () => {
       p_contact_full_name: form.contact_full_name || null,
       p_contact_job_title: form.contact_job_title || null,
       p_contact_email: form.contact_email || null,
-      p_contact_phone: form.contact_phone || null,
+      p_contact_phone: localPhone || null,
       p_registered_address: form.registered_address || null,
       p_operating_address: form.operating_address || null,
       p_city: form.city || null,
