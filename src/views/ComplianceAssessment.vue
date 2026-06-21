@@ -234,7 +234,7 @@
                 <transition name="expand">
                   <div class="ca-question-expanded" v-if="expandedQuestion === q.id">
                     <!-- Gap alert (shown on 'no') -->
-                    <div class="ca-gap-alert" v-if="getResponse(q.id) === 'no'">
+                    <!-- <div class="ca-gap-alert" v-if="getResponse(q.id) === 'no'">
                       <div class="ca-gap-alert-head">
                         <v-icon size="15" color="#ef4444">mdi-alert-circle-outline</v-icon>
                         Gap identified — remediation required
@@ -244,10 +244,10 @@
                         <v-icon size="13">mdi-paperclip</v-icon>
                         Evidence required: <strong>{{ q.evidence_required }}</strong>
                       </div>
-                    </div>
+                    </div> -->
 
                     <!-- Evidence hint (on 'yes') -->
-                    <div
+                    <!-- <div
                       class="ca-evidence-card"
                       v-if="getResponse(q.id) === 'yes' && q.evidence_required"
                     >
@@ -256,7 +256,7 @@
                         <div class="ca-evidence-title">Evidence to retain</div>
                         <div class="ca-evidence-text">{{ q.evidence_required }}</div>
                       </div>
-                    </div>
+                    </div> -->
 
                     <!-- Notes -->
                     <div class="ca-notes-wrap">
@@ -1149,15 +1149,15 @@ onMounted(loadOrCreateAssessment)
 .ca-question-card:hover {
   border-color: var(--ca-border-d);
 }
-.ca-question-card.is-yes {
+/* .ca-question-card.is-yes {
   border-color: rgba(34, 197, 94, 0.4);
-}
-.ca-question-card.is-no {
+} */
+/* .ca-question-card.is-no {
   border-color: rgba(239, 68, 68, 0.4);
 }
 .ca-question-card.is-na {
   border-color: rgba(148, 163, 184, 0.4);
-}
+} */
 .ca-question-card.critical {
   border-left: 3px solid #ef4444;
 }
