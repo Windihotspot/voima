@@ -60,10 +60,10 @@
           <div class="ref-value">{{ submittedRef }}</div>
         </div> -->
         <p class="success-hint">
-          You are to complete your <strong>Compliance Health Assessment</strong>, this helps us
-          understand your current compliance posture, identify gaps, and build a tailored action
-          plan for your organisation. It takes approximately <strong>5 – 10 minutes</strong> to
-          complete.
+          Kindly wait while You are been redirected to complete your
+          <strong>Compliance Health Assessment</strong>, this helps us understand your current
+          compliance posture, identify gaps, and build a tailored action plan for your organisation.
+          It takes approximately <strong>5 – 10 minutes</strong> to complete.
         </p>
 
         <v-btn class="voima-btn-primary mt-4" @click="returnHome" elevation="0">
