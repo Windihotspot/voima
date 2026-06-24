@@ -151,8 +151,7 @@
                   'is-yes': getResponse(q.id) === 'yes',
                   'is-no': getResponse(q.id) === 'no',
                   'is-na': getResponse(q.id) === 'na',
-                  expanded: expandedQuestion === q.id,
-                  critical: q.weight === 'critical'
+                  expanded: expandedQuestion === q.id
                 }"
                 :id="`q-${q.id}`"
               >
@@ -930,12 +929,12 @@ onMounted(loadOrCreateAssessment)
   min-width: 0;
 }
 .ca-header-title {
-  font-size: 14px;
+  font-size: 24px;
   font-weight: 700;
   color: var(--ca-ink);
 }
 .ca-header-sub {
-  font-size: 11px;
+  font-size: 16px;
   color: var(--ca-muted);
   letter-spacing: 0.04em;
   margin-top: 1px;
@@ -1001,7 +1000,7 @@ onMounted(loadOrCreateAssessment)
   align-items: center;
   gap: 6px;
   padding: 10px 14px;
-  font-size: 12px;
+  font-size: 16px;
   font-weight: 500;
   color: var(--ca-muted);
   cursor: pointer;
@@ -1203,7 +1202,7 @@ onMounted(loadOrCreateAssessment)
 }
 
 .ca-question-text {
-  font-size: 24px;
+  font-size: clamp(16px, 4vw, 24px);
   font-weight: 500;
   color: var(--ca-ink);
   margin: 0 0 4px;
