@@ -9,9 +9,9 @@
         <div class="disclaimer-body" ref="disclaimerBody" @scroll="handleDisclaimerScroll">
           <h3 class="disclaimer-title">Before You Begin</h3>
           <p class="disclaimer-text">
-            This secure portal allows your organisation to apply for Voima's Compliance as a Service
-            (CaaS) offering. The information you provide will be used exclusively for compliance
-            assessment and client onboarding purposes.
+            This secure portal allows your organisation to apply for Voima's Compliance as a
+            Structure (CaaS) offering. The information you provide will be used exclusively for
+            compliance assessment and client onboarding purposes.
           </p>
           <p class="disclaimer-text mt-3">
             Please have the following documents ready before proceeding:
