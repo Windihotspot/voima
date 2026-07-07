@@ -39,7 +39,7 @@
             @click="acceptDisclaimer"
             elevation="0"
           >
-            I Understand — Begin Application
+            I Understand — Begin Application.
           </v-btn>
         </div>
       </v-card>
