@@ -118,7 +118,7 @@
         <v-icon size="16" color="#060d14">mdi-shield-check-outline</v-icon>
         <span
           >All information is encrypted and handled in accordance with applicable data protection
-          laws.</span
+          laws</span
         >
       </div>
 
