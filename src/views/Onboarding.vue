@@ -21,7 +21,7 @@
             <li>Memorandum &amp; Articles of Association</li>
             <li>Board Resolution (if applicable)</li>
             <li>Regulatory License (if regulated)</li>
-            <li>AML/CFT Policy document</li>
+            <li>AML/CFT Policy document (if applicable)</li>
           </ul>
           <div class="disclaimer-divider" />
           <p class="disclaimer-legal">
@@ -77,6 +77,9 @@
       <!-- ── Header ── -->
       <div class="ob-header">
         <div class="ob-header-inner">
+          <div class="logo">
+            <img src="../assets/white-logo.jpeg" class="w-20 rounded-lg" alt="" />
+          </div>
           <div class="ob-header-title">Client Onboarding</div>
           <div class="ob-header-right">
             <div class="ob-save-indicator" v-if="saving">
@@ -191,6 +194,7 @@
                 </template>
 
                 <v-date-picker
+                  color="#154f8a"
                   :model-value="form.date_of_incorporation"
                   @update:model-value="
                     (val) => {
@@ -232,7 +236,7 @@
             <!-- Regulatory status -->
             <div class="ob-info-card text-white mt-2">
               <div class="ob-info-card-title">
-                <v-icon size="16" color="#060d14">mdi-bank-outline</v-icon>
+                <v-icon size="16" color="white">mdi-bank-outline</v-icon>
                 Regulatory Status
               </div>
               <div class="ob-radio-group mt-3">
@@ -246,7 +250,7 @@
                   hide-details="auto"
                 >
                   <v-radio label="Yes, we are regulated" :value="'yes'" />
-                  <v-radio label="No, not currently" :value="'no'" />
+                  <v-radio label="No, not currently regulated" :value="'no'" />
                   <v-radio label="Not Applicable" :value="'na'" />
                 </v-radio-group>
               </div>
@@ -288,6 +292,7 @@
                     </template>
 
                     <v-date-picker
+                      color="#154f8a"
                       :model-value="form.license_expiry_date"
                       @update:model-value="
                         (val) => {
@@ -869,6 +874,7 @@
                   </template>
 
                   <v-date-picker
+                    color="#154f8a"
                     :model-value="directorDraft.date_of_birth"
                     @update:model-value="
                       (val) => {
@@ -1493,10 +1499,9 @@ const dateRule = (v) => !v || /^\d{4}-\d{2}-\d{2}$/.test(v) || 'Use YYYY-MM-DD f
 // ── Static data ───────────────────────────────────────────────────────────
 const organisationTypes = [
   { label: 'Fintech', value: 'fintech' },
-  { label: 'Bank', value: 'bank' },
+  { label: 'Payment Service Provider', value: 'payment_service_provider' },
   { label: 'Microfinance Institution', value: 'microfinance' },
   { label: 'Insurance Company', value: 'insurance' },
-  { label: 'Payment Service Provider', value: 'payment_service_provider' },
   { label: 'Crypto / Digital Asset Exchange', value: 'crypto_exchange' },
   { label: 'Asset Management', value: 'asset_management' },
   { label: 'NGO / Non-Profit', value: 'ngo' },
@@ -1667,10 +1672,10 @@ watch(
   --v-surface: #ffffff;
   --v-header: #ffffff;
   --v-field: #f8fafc;
-  --v-teal: #060d14;
-  --v-teal-d: #00a892;
-  --v-teal-lt: #060d14;
-  --v-ink: #0f172a;
+  --v-teal: #154f8a;
+  --v-teal-d: #154f8a;
+  --v-teal-lt: #154f8a;
+  --v-ink: #154f8a;
   --v-muted: #64748b;
   --v-subtle: #94a3b8;
   --v-border: #e2e8f0;
@@ -2043,13 +2048,13 @@ watch(
 }
 .service-chip:hover {
   border-color: var(--v-teal);
-  color: var(--v-teal);
+  color: white;
   background: var(--v-teal-d);
 }
 .service-chip.selected {
   border-color: var(--v-teal);
   background: var(--v-teal-lt);
-  color: var(--v-teal-d);
+  color: white;
 }
 
 /* ── Directors ──────────────────────────────────────────────────────────── */
@@ -2199,7 +2204,7 @@ watch(
 }
 .doc-uploaded-name {
   font-size: 11px;
-  color: var(--v-teal-d);
+  color: white;
   margin-top: 4px;
   display: flex;
   align-items: center;
@@ -2459,7 +2464,6 @@ watch(
 }
 .disclaimer-text {
   font-size: 13px;
-  color: var(--v-muted);
   line-height: 1.7;
 }
 .disclaimer-list {
@@ -2485,7 +2489,6 @@ watch(
 }
 .disclaimer-legal {
   font-size: 12px;
-  color: var(--v-subtle);
   line-height: 1.7;
 }
 .disclaimer-footer {

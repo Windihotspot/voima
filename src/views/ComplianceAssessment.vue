@@ -630,16 +630,25 @@ const loadOrCreateAssessment = async () => {
   loading.value = true
   try {
     if (assessmentId.value) {
-      // Load existing
       const { data, error } = await supabase
         .from('compliance_assessments')
         .select('*')
         .eq('id', assessmentId.value)
-        .single()
+        .maybeSingle() // ✅ returns null instead of throwing when 0 rows
+
       if (error) throw error
+
+      if (!data) {
+        showSnack('Assessment not found or you no longer have access to it.')
+        loading.value = false
+        router.replace({ name: 'app' }) // or wherever makes sense
+        return
+      }
+
       assessment.value = data
 
-      // Load existing responses
+      await loadModulesAndQuestions()
+
       const { data: respData, error: respErr } = await supabase
         .from('assessment_responses')
         .select('question_id, response, notes')
@@ -651,32 +660,40 @@ const loadOrCreateAssessment = async () => {
       }
     } else if (applicationId.value) {
       // Create new assessment from application
-      const payload = {
-        p_application_id: applicationId.value
-      }
-      console.log('create assessment payload:', payload)
+      const payload = { p_application_id: applicationId.value }
       const { data, error } = await supabase.rpc('create_assessment_from_application', payload)
-      console.log('create assessment data:', data)
-      console.log('create assessment error:', error)
       if (error) throw error
-      console.log('create assessment error:', error)
       assessment.value = data
-      // Load applicable modules
       await loadModulesAndQuestions()
-
-      // Update URL without push so back button works
       router.replace({ name: 'assessment', params: { assessmentId: data.id } })
     }
 
-    healthScore.value = assessment.value.health_score || 0
-    healthRating.value = assessment.value.health_rating || 'needs_improvement'
+    // ✅ pull the authoritative score/rating from the DB instead of trusting the stored row
+    await refreshScore()
   } catch (err) {
     console.log('load assessment error:', err)
+    showSnack('Failed to load assessment: ' + err.message)
   } finally {
     loading.value = false
   }
 }
-
+const refreshScore = async () => {
+  if (!assessment.value?.id) return
+  const { data, error } = await supabase.rpc('recalculate_assessment_score', {
+    p_assessment_id: assessment.value.id
+  })
+  if (error) {
+    console.log('recalculate_assessment_score error:', error)
+    // fall back to whatever's on the row so the UI doesn't break
+    healthScore.value = assessment.value.health_score || 0
+    healthRating.value = assessment.value.health_rating || 'needs_improvement'
+    return
+  }
+  if (data?.success) {
+    healthScore.value = data.health_score
+    healthRating.value = data.health_rating
+  }
+}
 const loadModulesAndQuestions = async () => {
   const entityCat = assessment.value.entity_category
 
@@ -733,18 +750,15 @@ const loadModulesAndQuestions = async () => {
 let saveTimer = null
 
 const setResponse = async (question, value) => {
-  // Toggle off if same value clicked
   if (responses[question.id] === value) {
     responses[question.id] = null
   } else {
     responses[question.id] = value
-    // Auto-expand on 'no' to show gap info
     if (value === 'no') {
       expandedQuestion.value = question.id
     }
   }
 
-  recalcScore()
   scheduleSave(question.id)
 }
 
@@ -766,12 +780,13 @@ const saveResponse = async (questionId) => {
     })
     if (error) throw error
 
-    // Update assessment health score in DB
+    // Recompute on the server — handles admin overrides, adjustments, etc.
+    await refreshScore()
+
+    // Keep status in sync (RPC doesn't touch this column)
     await supabase
       .from('compliance_assessments')
       .update({
-        health_score: healthScore.value,
-        health_rating: healthRating.value,
         status: overallProgress.value > 0 ? 'in_progress' : 'not_started',
         updated_at: new Date().toISOString()
       })

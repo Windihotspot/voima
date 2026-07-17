@@ -20,6 +20,11 @@ const router = createRouter({
       path: '/assessment/new/:applicationId',
       name: 'assessment-new',
       component: ComplianceAssessment
+    },
+    {
+      path: '/assessment/:assessmentId',
+      name: 'assessment',
+      component: ComplianceAssessment
     }
   ]
 })
