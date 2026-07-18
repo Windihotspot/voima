@@ -78,7 +78,7 @@
       <div class="ob-header">
         <div class="ob-header-inner">
           <div class="logo">
-            <img src="../assets/white-logo.jpeg" class="w-20 rounded-lg" alt="" />
+            <img src="../assets/new-logo.jpeg" class="w-20 rounded-lg" alt="" />
           </div>
           <div class="ob-header-title">Client Onboarding</div>
           <div class="ob-header-right">
