@@ -440,6 +440,8 @@
         <v-btn variant="text" @click="snack.show = false">Close</v-btn>
       </template>
     </v-snackbar>
+
+    <VoimaXAssistant v-if="!loading" :context="activeQuestionForAssistant" />
   </div>
 </template>
 
@@ -447,6 +449,7 @@
 import { ref, reactive, computed, onMounted, watch, nextTick } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { supabase } from '@/services/supabase'
+import VoimaXAssistant from '@/components/VoimaXAssistant.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -873,6 +876,34 @@ const showSnack = (message, color = 'error') => {
 
 // ── Init ──────────────────────────────────────────────────────────────────
 onMounted(loadOrCreateAssessment)
+// ── VoimaX context ──────────────────────────────────────────────────────
+const activeQuestionForAssistant = computed(() => {
+  // Prefer the expanded question if one is open, else the first question
+  // in the active module, so the assistant always has something concrete
+  // to talk about even before the user clicks into a specific question.
+  const qId = expandedQuestion.value
+  const q = qId
+    ? activeModuleQuestions.value.find((q) => q.id === qId)
+    : activeModuleQuestions.value[0]
+
+  return q
+    ? {
+        module_name: activeModule.value?.name,
+        module_description: activeModule.value?.description,
+        question_ref: q.question_ref,
+        question_text: q.question_text,
+        weight: q.weight,
+        evidence_required: q.evidence_required,
+        remediation_action: q.remediation_action,
+        current_response: getResponse(q.id),
+        entity_category: assessment.value?.entity_category
+      }
+    : {
+        module_name: activeModule.value?.name,
+        module_description: activeModule.value?.description,
+        entity_category: assessment.value?.entity_category
+      }
+})
 </script>
 
 <style>

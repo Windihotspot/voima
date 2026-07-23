@@ -956,6 +956,7 @@
 </template>
 
 <script setup>
+import VoimaXAssistant from '@/components/VoimaXAssistant.vue'
 import { ref, reactive, computed, watch } from 'vue'
 import { supabase } from '@/services/supabase'
 const incorporationMenu = ref(false)
